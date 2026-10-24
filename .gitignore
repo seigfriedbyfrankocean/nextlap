@@ -2,3 +2,25 @@
 f1_cache/
 __pycache__/
 .vscode/
+
+# Python bytecode and test/tool caches
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Local OpenF1 race-part caches
+race_parts*/
+
+# Local prediction history database
+prediction_log.sqlite*
+
+# Generated local dataset/report outputs (the tracked v3 replay inputs stay tracked)
+/laps_sample.csv
+/removal_log.csv
+/removal_log_v3.csv
+/race_control_windows_v3.csv
+/excluded_races_v3.csv
+/build_out.txt
+/spielberg_replay.csv
