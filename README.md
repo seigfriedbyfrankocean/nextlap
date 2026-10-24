@@ -15,7 +15,15 @@ A local Formula 1 dashboard for following live race sessions and exploring histo
 
 Historical replay is a review of completed races. It is not a live prediction.
 
-## How to run it
+## Screenshots
+
+The live monitor shows forecasts as race session data arrives.
+
+![NextLap live monitor](docs/screenshots/live-monitor.png)
+
+Historical replay lets you inspect a completed race one forecast at a time.
+
+![NextLap historical replay](docs/screenshots/historical-replay.png)`n`n## How to run it
 
 Use a Python environment with the project dependencies installed. From the project folder, start the dashboard:
 
