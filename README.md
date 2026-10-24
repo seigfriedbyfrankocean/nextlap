@@ -11,7 +11,7 @@ A local Formula 1 dashboard for tracking live race sessions and evaluating histo
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 * **Live Monitor:** Connects to OpenF1 during live sessions and generates real-time telemetry forecasts as new lap data arrives.
 * **Historical Replay:** Enables step-by-step review of completed past races, comparing model forecasts directly against actual completed laps.
@@ -22,7 +22,7 @@ A local Formula 1 dashboard for tracking live race sessions and evaluating histo
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Live Monitor
 *Displays real-time forecasts updated continuously as race data streams in.*
@@ -36,7 +36,7 @@ A local Formula 1 dashboard for tracking live race sessions and evaluating histo
 
 ---
 
-## 🛠️ How to Run Locally
+## How to Run Locally
 
 ### Prerequisites
 Ensure you have Python 3.9+ and project dependencies installed.
