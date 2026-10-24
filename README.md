@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="web/assets/icon.png" alt="NextLap, always a lap ahead" width="720">
+  <img src="web/assets/icon.png" alt="NextLap, always a lap ahead" width="360">
 </p>
 
 # NextLap
