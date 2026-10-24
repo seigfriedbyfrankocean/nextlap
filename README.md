@@ -33,7 +33,11 @@ python local_app.py
 
 Open [http://127.0.0.1:8765](http://127.0.0.1:8765) in your browser. Stop the server with `Ctrl+C`.
 
-The live monitor reads current session data from OpenF1, so it needs an internet connection and an eligible race session to produce live forecasts. Historical replay uses the datasets included in the repository.
+## Hosted demo
+
+Visit [nextlap.pages.dev](https://nextlap.pages.dev) to try the hosted portfolio demo. It opens in historical replay and includes replay data from the 2023 through 2026 seasons. Live monitoring is available when you run the Python app locally because it needs the server to connect to OpenF1.
+
+The hosted historical replay uses bundled prediction data generated from the project dataset and model. To rebuild it after changing the data, run `python build_static_demo.py` in an environment with the project dependencies installed.
 
 ## Project files
 
@@ -41,6 +45,7 @@ The live monitor reads current session data from OpenF1, so it needs an internet
 * `web/` contains the dashboard page, branding, fonts, and circuit layouts.
 * `predict_live.py` handles live session forecasts.
 * `model_fit.py` contains the gradient boosting model training code.
+* `build_static_demo.py` generates the replay data used by the hosted portfolio demo.
 * `laps_sample_v3.csv` contains the historical lap data used by the project.
 * `replay_2026_holdout.csv` contains the held out replay data.
 

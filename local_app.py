@@ -577,6 +577,19 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": str(exc)}, 404)
             except Exception as exc:
                 return self._json({"error": f"Could not load driver list: {exc}"}, 502)
+        if route.startswith("/demo-data/"):
+            filename = route.removeprefix("/demo-data/")
+            demo_root = (WEB / "demo-data").resolve()
+            path = (demo_root / filename).resolve()
+            if not path.is_relative_to(demo_root) or path.suffix != ".json" or not path.is_file():
+                return self.send_error(404)
+            body = path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-cache")
+            self.end_headers()
+            return self.wfile.write(body)
         if route.startswith("/assets/"):
             filename = route.removeprefix("/assets/")
             if filename in {"icon.png", "logo.png", "Formula1-Bold_web_0.ttf", "f1-mark.svg"}:
