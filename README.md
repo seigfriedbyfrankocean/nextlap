@@ -231,11 +231,9 @@ Model performance depends on data quality, feature availability, and the conditi
 
 ---
 
-Suggestions and bug reports are welcome through the [GitHub Issues](https://github.com/seigfriedbyfrankocean/NextLap/issues) page.
-
 ## Contributing
 
-Contributions, suggestions, and constructive feedback are welcome.
+Contributions, suggestions, ,constructive feedback and bug reports are welcome through the [GitHub Issues](https://github.com/seigfriedbyfrankocean/NextLap/issues) page.
 
 1. Fork the repository.
 2. Create a feature branch.
