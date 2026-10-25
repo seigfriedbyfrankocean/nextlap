@@ -231,19 +231,7 @@ Model performance depends on data quality, feature availability, and the conditi
 
 ---
 
-## Roadmap
-
-Potential areas for future development include:
-
-- [ ] Expand model evaluation across circuits, seasons, and race conditions.
-- [ ] Investigate the effects of tyre age, compound, and stint progression on lap times.
-- [ ] Improve handling of safety-car periods and unusual race events.
-- [ ] Add more detailed prediction error analysis and visualizations.
-- [ ] Document model limitations and evaluation results more comprehensively.
-
 Suggestions and bug reports are welcome through the [GitHub Issues](https://github.com/seigfriedbyfrankocean/NextLap/issues) page.
-
----
 
 ## Contributing
 
