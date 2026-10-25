@@ -1,0 +1,5 @@
+I removed laps that involve a pit stop (the lap going in and the lap coming out), because they are far slower than normal racing laps and would mislead the model. Lap times generally rise as tyres wear, but the car also gets lighter as fuel burns, so the two effects compete. Compounds trade speed for durability: softs are fastest but wear soonest, mediums sit in the middle, and hards are slowest but last longest. I use tyre age and lap number as separate inputs because strategies differ between teams, and lap number also stands in for fuel load.
+
+Open questions: why NOR was slower in the first stint, how much of the post-stop gain comes from tyres versus fuel, and whether my lap filter removes good laps.
+
+It removes 5% of laps that significantly alter the varied data. The 5% cleaned laps are: Pit stops and slow laps required for formation.
