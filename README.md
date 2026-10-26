@@ -143,8 +143,6 @@ The local application provides access to live monitoring and the dashboard's loc
 
 4. Install the project dependencies using the dependency manifest provided in the repository.
 
-   If a `requirements.txt` file is present:
-
    ```powershell
    pip install -r requirements.txt
    ```
