@@ -203,6 +203,28 @@ NextLap compares its Gradient Boosting model with a circuit-median baseline. Thi
 
 The project also uses a holdout dataset for additional evaluation.
 
+### Recorded Results (Earlier Dataset)
+
+The following MAEs are recorded results from earlier evaluation runs. They have **not yet been verified on the rebuilt v3 dataset** and are not a fresh evaluation of the current dataset or model artifacts.
+
+Mean absolute error (MAE) is reported in seconds; **lower is better**.
+
+| Approach | Held-out races MAE (s) | 2026 held-out season MAE (s) |
+|---|---|---|
+| Persistence baseline | 0.409 | 0.486 |
+| Circuit baseline | **0.408** | **0.485** |
+| Recent-pace baseline | 0.425 | 0.500 |
+| Ridge regression | 0.441 | 0.554 |
+| HistGradientBoosting | 0.541 | 0.793 |
+
+**The trained models do not outperform the circuit baseline in either evaluation.** On held-out races, Ridge has approximately **8.1% higher MAE** and HistGradientBoosting approximately **32.6% higher MAE** than the circuit baseline. These percentages use `(model MAE / circuit baseline MAE - 1) * 100` and the rounded values above; they represent worse performance, not an improvement.
+
+### Data Quality Caveat
+
+A data-filtering/race-control bug in the v3 dataset builder is currently being investigated: an invalid red-flag window for the 2023 Australian Grand Prix ended before it started. Invalid windows could incorrectly include or exclude laps affected by race-control events. The effect on dataset filtering and evaluation results has not yet been established.
+
+These figures describe performance on the earlier dataset only. The race-control issue needs to be resolved, the rebuilt dataset validated, and the evaluations rerun before reporting verified v3 results.
+
 Areas of interest include:
 
 - Prediction error across different races and circuits
