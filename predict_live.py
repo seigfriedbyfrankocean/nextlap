@@ -1,5 +1,6 @@
 """Predict the next lap from OpenF1's latest completed race lap."""
 import argparse
+import os
 import sqlite3
 import time
 from pathlib import Path
@@ -13,10 +14,35 @@ from predict_next_lap import predict_next_lap
 API = "https://api.openf1.org/v1"
 DEFAULT_LOG_DB = Path(__file__).resolve().with_name("prediction_log.sqlite")
 
+_token = None
+_token_expires_at = 0
 
+def openf1_headers():
+    global _token, _token_expires_at
+
+    username = os.getenv("OPENF1_USERNAME")
+    password = os.getenv("OPENF1_PASSWORD")
+    if not username or not password:
+        return {}
+
+    if _token is None or time.monotonic() >= _token_expires_at:
+        response = requests.post(
+            "https://api.openf1.org/token",
+            data={"username": username, "password": password},
+            timeout=20,
+        )
+        response.raise_for_status()
+        data = response.json()
+        _token = data["access_token"]
+        _token_expires_at = time.monotonic() + int(data.get("expires_in", 3600)) - 60
+
+    return {"Authorization": f"Bearer {_token}"}
+    
 def get_frame(endpoint, **params):
     try:
-        response = requests.get(f"{API}/{endpoint}", params=params, timeout=20)
+        response = requests.get(
+            f"{API}/{endpoint}", params=params, headers=openf1_headers(), timeout=20
+        )
     except requests.RequestException as exc:
         raise RuntimeError(f"OpenF1 request failed: {exc}") from exc
 
