@@ -24,3 +24,6 @@ prediction_log.sqlite*
 /excluded_races_v3.csv
 /build_out.txt
 /spielberg_replay.csv
+
+# Local prediction history database
+/data/prediction_log.sqlite*

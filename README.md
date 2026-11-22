@@ -1,26 +1,59 @@
-﻿# NextLap
+# NextLap
 
-NextLap forecasts a Formula 1 driver's next lap time. The local dashboard can watch a live race through OpenF1. The hosted site replays completed races and compares forecasts with actual lap times.
+![NextLap live monitor](docs/screenshots/live-monitor.png)
 
-The live monitor uses the latest completed lap as a persistence forecast. Historical replay also shows circuit-median and machine-learning estimates. The replay model uses lap, tyre, and weather features from earlier races.
+NextLap is a Formula 1 lap-time forecasting project. The local dashboard reads OpenF1 race data and makes a simple next-lap forecast. The hosted demo replays completed races and compares that forecast with circuit-median and machine-learning estimates.
 
-## What it includes
+Try the hosted replay at [nextlap.pages.dev](https://nextlap.pages.dev).
 
-- Live race monitoring in the local Python app
-- Historical race replay in the local app and hosted demo
-- Persistence, circuit-median, and machine-learning forecasts for comparison
-- A forecast log that matches predictions with the next completed lap
+## What it does
+
+- Watches a live race from the local app and logs next-lap forecasts.
+- Replays completed races in the hosted demo.
+- Compares persistence, circuit-median, Ridge, and HistGradientBoosting predictions.
+
+## Screenshots
+
+### Live monitor
+
+![NextLap live monitor](docs/screenshots/live-monitor.png)
+
+### Historical replay
+
+![NextLap historical replay](docs/screenshots/historical-replay.png)
+
+## How it works
+
+The target is the change from the current lap to the next one: `NextLapSeconds - LapSeconds`. A prediction estimates that change, then adds it to the current lap time. The historical models use driver, team and season, circuit, tyre compound and age, fresh-tyre status, track and air temperature, and current-lap time.
+
+The live monitor currently uses a persistence forecast: it predicts that the next lap will match the latest completed lap. The fitted models are used in historical replay and evaluation.
+
+Evaluation uses two splits:
+
+- Five-fold `GroupKFold` cross-validation holds out whole races, so laps from a test race do not appear in its training fold. The current dataset contains 67,707 rows across 75 races.
+- The separate 2026 holdout is chronological: models train on 54,619 rows from 2023 through 2025, then score 12,131 rows from 2026. The 2026 holdout is kept out of model fitting.
+
+Lower MAE is better. These results show the fitted models behind the simple baselines:
+
+| Predictor | Race-held-out CV MAE (s) | 2026 holdout MAE (s) |
+|---|---:|---:|
+| Persistence | 0.408 | 0.486 |
+| Circuit median | **0.407** | **0.485** |
+| Ridge regression | 0.437 | 0.556 |
+| HistGradientBoosting | 0.524 | 0.778 |
+
+Neither fitted model beat the circuit-median baseline. On the 2026 holdout, HistGradientBoosting had 0.778 s MAE versus 0.485 s for the circuit median.
 
 ## Stack
 
-- Python, pandas, and scikit-learn for data processing and model evaluation
-- OpenF1 for race data
-- HTML, CSS, and JavaScript for the dashboard
+- Python, NumPy, pandas, and scikit-learn for data processing and model evaluation
+- OpenF1 for live and historical race data
+- Vanilla JavaScript, HTML, and CSS for the dashboard; no frontend framework
 - Cloudflare Pages for the hosted replay demo
 
 ## Run locally
 
-From the repository root, create and activate a virtual environment, then install the dependencies:
+From the repository root, create and activate a virtual environment and install the dependencies:
 
 ```powershell
 python -m venv .venv
@@ -34,54 +67,41 @@ Start the dashboard:
 python local_app.py
 ```
 
-Open [http://127.0.0.1:8765](http://127.0.0.1:8765). Press `Ctrl+C` in the terminal to stop it.
-
-The live monitor needs OpenF1 live-data access. Historical replay works from the dataset included in the repository.
+Open [http://127.0.0.1:8765](http://127.0.0.1:8765). Press `Ctrl+C` in the terminal to stop it. Live monitoring requires OpenF1 live-data access; historical replay uses the included data.
 
 ## Refresh race replay data
 
-Build the historical dataset and its static replay files with:
+To rebuild the historical dataset and replay files manually:
 
 ```powershell
 python build_dataset_openf1_v3.py
 python build_static_demo.py
 ```
 
-GitHub Actions runs this refresh on Monday evenings and can also be started manually from the Actions tab. A successful run commits the updated replay files to the default branch; the hosted site then redeploys through its Git connection.
+GitHub Actions also runs the refresh on Monday evenings and can be started manually from the Actions tab. A successful run commits the new data and replay files; the hosted site then redeploys through its Git connection.
 
-## Model evaluation
+## Limitations and next steps
 
-The figures below come from an earlier dataset and have not been rerun on the current v3 data. Lower MAE is better.
-
-| Approach | Held-out races MAE (s) | 2026 held-out season MAE (s) |
-|---|---:|---:|
-| Persistence baseline | 0.409 | 0.486 |
-| Circuit baseline | **0.408** | **0.485** |
-| Recent-pace baseline | 0.425 | 0.500 |
-| Ridge regression | 0.441 | 0.554 |
-| HistGradientBoosting | 0.541 | 0.793 |
-
-In those runs, neither fitted model beat the circuit baseline. Treat the results as historical until the v3 data is validated and the evaluation is rerun.
+- The live monitor uses the current lap as its forecast and does not predict pit strategy.
+- The live forecast skips wet, pit-out, pit-in, and neutralised laps.
+- The historical dataset excludes wet races and races with incomplete lap data.
+- The fitted models currently trail the circuit-median baseline. Improving the features and validating future seasons remain open work.
 
 ## Project layout
 
 | Path | Purpose |
 |---|---|
-| `local_app.py` | Local dashboard server |
-| `predict_live.py` | Live-session data handling and forecasts |
-| `predict_next_lap.py` | Persistence and circuit-median forecast helpers |
-| `build_dataset_openf1_v3.py` | Validated OpenF1 dataset builder |
-| `build_static_demo.py` | Generates replay JSON for the hosted site |
-| `analysis/` | Offline model fitting, race replay, and tyre analysis |
-| `web/` | Dashboard frontend and static replay data |
-| `laps_sample_v3.csv` | Historical lap dataset |
-| `replay_2026_holdout.csv` | Holdout dataset for evaluation |
-
-Run analysis modules from the repository root, for example:
-
-```powershell
-python -m analysis.replay_backtest --year 2026 --round 8
-```
+| `src/local_app.py` | Local dashboard server |
+| `src/predict_live.py` | Live-session data handling and forecast logging |
+| `src/predict_next_lap.py` | Persistence and circuit-median forecast helpers |
+| `src/build_dataset_openf1_v3.py` | OpenF1 dataset builder |
+| `src/build_static_demo.py` | Generates replay files for the hosted site |
+| `src/analysis/` | Offline model fitting, backtesting, and tyre analysis |
+| `data/laps_sample_v3.csv` | Historical training dataset |
+| `data/replay_2026_holdout.csv` | 2026 holdout predictions and errors |
+| `data/reports/` | Dataset audit outputs |
+| `data/archive/` | Earlier dataset and analysis artifacts |
+| `web/` | Dashboard frontend, assets, and generated replay data |
 
 ## Contributing
 

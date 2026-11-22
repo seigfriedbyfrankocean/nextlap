@@ -12,7 +12,7 @@ from build_dataset_openf1_v3 import build_windows
 from predict_next_lap import predict_next_lap
 
 API = "https://api.openf1.org/v1"
-DEFAULT_LOG_DB = Path(__file__).resolve().with_name("prediction_log.sqlite")
+DEFAULT_LOG_DB = Path(__file__).resolve().parent.parent / "data" / "prediction_log.sqlite"
 
 _token = None
 _token_expires_at = 0

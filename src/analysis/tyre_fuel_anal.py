@@ -24,7 +24,7 @@ def removal_overview():
     if not os.path.exists("removal_log.csv"):
         return
     try:
-        log = pd.read_csv("removal_log.csv")
+        log = pd.read_csv("data/archive/removal_log.csv")
         excluded = log["excluded"].fillna("")
         kept = log[excluded == ""]
         raw_all = log["raw_laps"].sum()
@@ -47,7 +47,7 @@ removal_overview()
 # ---------------------------------------------------------------------------
 # 1. Load and prepare
 # ---------------------------------------------------------------------------
-data = pd.read_csv("laps_sample.csv")
+data = pd.read_csv("data/archive/laps_sample.csv")
 need = ["Driver", "Year", "Circuit", "Compound", "TyreLife",
         "LapNumber", "TrackTemp", "LapSeconds", "Stint"]
 d = data.dropna(subset=need).copy()

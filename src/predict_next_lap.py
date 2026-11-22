@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-DEFAULT_DATA = Path(__file__).resolve().with_name("laps_sample_v3.csv")
+DEFAULT_DATA = Path(__file__).resolve().parent.parent / "data" / "laps_sample_v3.csv"
 
 
 def fit_baseline(dataset_path=DEFAULT_DATA, before_year=None):

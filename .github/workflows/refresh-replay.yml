@@ -32,9 +32,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: race_parts_openf1_v3
-          key: openf1-v3-${{ runner.os }}-${{ hashFiles('build_dataset_openf1_v3.py') }}-${{ github.run_id }}
+          key: openf1-v3-${{ runner.os }}-${{ hashFiles('src/build_dataset_openf1_v3.py') }}-${{ github.run_id }}
           restore-keys: |
-            openf1-v3-${{ runner.os }}-${{ hashFiles('build_dataset_openf1_v3.py') }}-
+            openf1-v3-${{ runner.os }}-${{ hashFiles('src/build_dataset_openf1_v3.py') }}-
 
       - name: Install build dependencies
         run: python -m pip install --upgrade pip numpy pandas requests scikit-learn
@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laps_sample_v3.csv web/demo-data
+          git add data/laps_sample_v3.csv data/reports web/demo-data
           if git diff --cached --quiet; then
             echo "Replay files are already up to date."
             exit 0

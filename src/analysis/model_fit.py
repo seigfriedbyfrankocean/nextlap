@@ -31,7 +31,7 @@ NUM = TYRE_COLS + TEMP_COLS + ["FreshTyre", "LapSeconds"]
 
 
 # ---- Load data and build features ----
-DATA_PATH = "laps_sample_v3.csv"
+DATA_PATH = "data/laps_sample_v3.csv"
 data = pd.read_csv(DATA_PATH)
 
 data["Car"] = (
