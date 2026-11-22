@@ -1,7 +1,5 @@
 # NextLap
 
-![NextLap live monitor](docs/screenshots/live-monitor.png)
-
 NextLap is a Formula 1 lap-time forecasting project. The local dashboard reads OpenF1 race data and makes a simple next-lap forecast. The hosted demo replays completed races and compares that forecast with circuit-median and machine-learning estimates.
 
 Try the hosted replay at [nextlap.pages.dev](https://nextlap.pages.dev).
