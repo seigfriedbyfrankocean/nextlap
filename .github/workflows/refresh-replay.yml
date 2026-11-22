@@ -1,0 +1,58 @@
+name: Refresh historical race replay
+
+on:
+  schedule:
+    # Run Monday evening IST, after the weekend sessions are available as history.
+    - cron: "30 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-historical-replay
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Restore OpenF1 race cache
+        uses: actions/cache@v4
+        with:
+          path: race_parts_openf1_v3
+          key: openf1-v3-${{ runner.os }}-${{ hashFiles('build_dataset_openf1_v3.py') }}-${{ github.run_id }}
+          restore-keys: |
+            openf1-v3-${{ runner.os }}-${{ hashFiles('build_dataset_openf1_v3.py') }}-
+
+      - name: Install build dependencies
+        run: python -m pip install --upgrade pip numpy pandas requests scikit-learn
+
+      - name: Fetch finished races and rebuild the dataset
+        run: python build_dataset_openf1_v3.py
+
+      - name: Regenerate the hosted replay files
+        run: python build_static_demo.py
+
+      - name: Publish updated replay files to the default branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laps_sample_v3.csv web/demo-data
+          if git diff --cached --quiet; then
+            echo "Replay files are already up to date."
+            exit 0
+          fi
+          git commit -m "Refresh historical race replay data"
+          git push
